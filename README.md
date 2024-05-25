@@ -2,7 +2,7 @@
 
 This project primarily focuses on learning Python fundamentals, data structures, and object-oriented programming.
 
-## App key features:
+## App key features
 
 -   Create and manage the user’s recipes on a locally hosted MySQL database.
 
