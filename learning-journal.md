@@ -23,9 +23,9 @@ Prepare your developer environment for programming with Python
 
 #### Notes:
 
--   Install pip: python3 -m pip install
+-   Install pip: `python3 -m pip install`
 
--   Start Python in CML: python
+-   Start Python in CML: `python`
 
 -   Open a Python file in CML : `python <file name>`
 
