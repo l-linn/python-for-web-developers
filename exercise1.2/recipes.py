@@ -4,6 +4,8 @@ recipe_1 = {
   'ingredients':['Tea leaves','Suger','Water']
 }
 
+all_recipes = [recipe_1]
+
 recipe_2 = { 
   'name': 'Banana Pancakes',
   'cooking_time_in_minutes' : 15,
@@ -30,7 +32,7 @@ recipe_5 = {
 }
 
 
-all_recipes = [recipe_1, recipe_2, recipe_3, recipe_4, recipe_5]
+all_recipes.extend([recipe_2, recipe_3, recipe_4, recipe_5])
 
 for i in all_recipes:
   i_ingredients = i.get('ingredients')
