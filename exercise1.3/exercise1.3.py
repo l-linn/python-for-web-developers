@@ -30,7 +30,6 @@ for i in range(n):
       ingredients_list.append(ingredient)
   
   recipes_list.append(recipe)
-  print(recipes_list)
 
 
 for recipe in recipes_list:
@@ -56,7 +55,7 @@ for recipe in recipes_list:
     print(f"Difficulty Level: {recipe['difficulty']}")
 
 ingredients_list.sort()
-print('Ingredients Available Across All Recipes\n- - - - - - - - - - - - - - - - - -')
+print('\nIngredients Available Across All Recipes\n- - - - - - - - - - - - - - - - - -')
 for ingredient in ingredients_list:
   print(ingredient)
 
