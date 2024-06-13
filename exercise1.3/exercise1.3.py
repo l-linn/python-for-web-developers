@@ -35,6 +35,7 @@ for i in range(n):
 for recipe in recipes_list:
   cooking_time = int(recipe['cooking_time'])
   num_of_ingredients = len(recipe['ingredients'])
+  difficulty = ''
 
   if cooking_time < 10 and num_of_ingredients < 4:
     difficulty = 'Easy'
@@ -54,8 +55,9 @@ for recipe in recipes_list:
     print("Ingredients:\n- " + '\n- '.join(recipe['ingredients']))#use join method to join the values to one string, also can not use backslash in f string
     print(f"Difficulty Level: {recipe['difficulty']}")
 
-ingredients_list.sort()
+sorted_ingredients_list = sorted(ingredients_list)
+
 print('\nIngredients Available Across All Recipes\n- - - - - - - - - - - - - - - - - -')
-for ingredient in ingredients_list:
-  print(ingredient)
+for ingredient in sorted_ingredients_list:
+  print(ingredient.capitalize())
 
