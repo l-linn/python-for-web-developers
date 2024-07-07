@@ -1,0 +1,6 @@
+number_list = [50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60]
+number_list_string = str(number_list)
+with open('./code-practice/number_list.txt','w') as my_file:
+    my_file.writelines(number_list_string)
+
+
