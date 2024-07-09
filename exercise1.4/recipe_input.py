@@ -1,11 +1,9 @@
 import pickle
 
-#Define empty lists
-
-
 #Define the function for calculating the recipe difficlty
 def calc_difficulty(cooking_time, num_of_ingredients):
   difficulty=''
+
   if cooking_time < 10 and num_of_ingredients < 4:
     difficulty = 'Easy'
   elif cooking_time < 10 and num_of_ingredients >= 4:
@@ -32,10 +30,10 @@ def take_recipe():
       break
     ingredients.append(ingredient)
 
-#call previous function to add difficulty to recipe
+  #call previous function to add difficulty to recipe
   difficulty = calc_difficulty(int(cooking_time), len(ingredients))
 
-#put all attributes to a dictionary and return it
+  #put all attributes to a dictionary and return it
   recipe = {
   'name': name,
   'cooking_time': cooking_time,
@@ -89,17 +87,3 @@ data = {
 #open user's file and write data into it
 with open ('user_filename','rb') as user_file:
   pickle.dump(data, user_file)
-
-print('\nRecipes List:')
-for recipe in recipes_list:
-    print(f"Recipe Name: {recipe['name']}") #need to use double quotes for printing dict's key value pairs
-    print(f"Cooking Time (min): {recipe['cooking_time']}")
-    print("Ingredients:\n- " + '\n- '.join(recipe['ingredients']))#use join method to join the values to one string, also can not use backslash in f string
-    print(f"Difficulty Level: {recipe['difficulty']}")
-
-sorted_all_ingredients = sorted(all_ingredients)
-
-print('\nIngredients Available Across All Recipes\n- - - - - - - - - - - - - - - - - -')
-for ingredient in sorted_all_ingredients:
-  print(ingredient.capitalize())
-
