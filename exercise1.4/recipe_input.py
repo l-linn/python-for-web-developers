@@ -82,7 +82,7 @@ for i in range(n):
 
 #update date
 data = {
-  'recipe_list': recipes_list,
+  'recipes_list': recipes_list,
   'all_ingredients' : all_ingredients
 }
 
