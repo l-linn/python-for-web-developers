@@ -45,7 +45,18 @@ def take_recipe():
   }
   return recipe #need to return the variable to save it
 
-#try-except-else-finally block
+#try-except-else-finally block to store and access user's data
+user_filename = input('Please create a name for your recipe collection: ')
+
+try:
+  with open('user_filename','rb') as user_file:
+    data = pickle.load(user_file)
+except:
+  
+
+
+
+
 
 
 n = int(input('How many recipes would you like to entre? '))
