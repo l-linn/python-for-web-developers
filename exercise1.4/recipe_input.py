@@ -1,44 +1,12 @@
 import pickle
 
+#Define empty lists
 recipes_list = []
 ingredients_list = []
 
-def take_recipe():
-  name = input('Please give your recipe a name: ')
-  cooking_time = input('How long is the cooking time? In minutes please: ')
-
-  ingredients = [] #create an empty list then add user input into the list as list item
-  print('Please list out the ingredients (type \'done\' when finished)') #skip quotes - adding backslash bedore hte single quotation 
-  while True:
-    ingredient = input('- ')
-    if ingredient.lower() == 'done':
-      break
-    ingredients.append(ingredient)
-
-  recipe = {
-    'name': name,
-    'cooking_time': cooking_time,
-    'ingredients': ingredients
-    }
-  return recipe #need to return the variable to save it
-
-n = int(input('How many recipes would you like to entre? '))
-
-for i in range(n):
-  recipe = take_recipe()
-
-  for ingredient in recipe['ingredients']:
-    if ingredient not in ingredients_list:
-      ingredients_list.append(ingredient)
-  
-  recipes_list.append(recipe)
-
-
-for recipe in recipes_list:
-  cooking_time = int(recipe['cooking_time'])
-  num_of_ingredients = len(recipe['ingredients'])
-  difficulty = ''
-
+#Define the function for calculating the recipe difficlty
+def calc_difficulty(cooking_time, num_of_ingredients):
+  difficulty=''
   if cooking_time < 10 and num_of_ingredients < 4:
     difficulty = 'Easy'
   elif cooking_time < 10 and num_of_ingredients >= 4:
@@ -49,8 +17,46 @@ for recipe in recipes_list:
     difficulty = 'Hard'
   else:
     print('Hmm, something is not right.')
+  
+  return difficulty
 
-  recipe['difficulty'] = difficulty #add difficulty as a key to the recipe dict
+#Define the function for taking user input - recipe name, cooking time, ingredients
+def take_recipe():
+  name = input('Please give your recipe a name: ')
+  cooking_time = input('How long is the cooking time? In minutes please: ')
+  
+  ingredients = [] #create an empty list then add user input into the list as list item
+  print('Please list out the ingredients (type \'done\' when finished)') #skip quotes - adding backslash bedore hte single quotation 
+  while True:
+    ingredient = input('- ')
+    if ingredient.lower() == 'done':
+      break
+    ingredients.append(ingredient)
+
+#call previous function to add difficulty to recipe
+  difficulty = calc_difficulty(int(cooking_time), len(ingredients))
+
+#put all attributes to a dictionary and return it
+  recipe = {
+  'name': name,
+  'cooking_time': cooking_time,
+  'ingredients': ingredients,
+  'difficulty': difficulty
+  }
+  return recipe #need to return the variable to save it
+
+#try-except-else-finally block
+
+
+n = int(input('How many recipes would you like to entre? '))
+for i in range(n):
+  recipe = take_recipe()
+
+  for ingredient in recipe['ingredients']:
+    if ingredient not in ingredients_list:
+      ingredients_list.append(ingredient)
+  
+  recipes_list.append(recipe)
 
 print('\nRecipes List:')
 for recipe in recipes_list:
