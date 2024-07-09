@@ -1,4 +1,6 @@
 import pickle
+recipes_list = []
+all_ingredients = []
 
 #Define the function for calculating the recipe difficlty
 def calc_difficulty(cooking_time, num_of_ingredients):
@@ -46,7 +48,7 @@ def take_recipe():
 user_filename = input('Please create a name for your recipe collection: ')
 
 try:
-  with open('user_filename','rb') as user_file:
+  with open(user_filename,'rb') as user_file:
     data = pickle.load(user_file)
 except FileNotFoundError:
   data = {
@@ -64,7 +66,7 @@ else:
   user_file.close()
 #extracting the data loaded from user's files
 finally:
-  recipes_list = data['recipe_list']
+  recipes_list = data['recipes_list']
   all_ingredients = data['all_ingredients']
 
 
@@ -85,5 +87,5 @@ data = {
 }
 
 #open user's file and write data into it
-with open ('user_filename','rb') as user_file:
+with open (user_filename,'wb') as user_file:
   pickle.dump(data, user_file)
