@@ -1,8 +1,7 @@
 import pickle
 
 #Define empty lists
-recipes_list = []
-ingredients_list = []
+
 
 #Define the function for calculating the recipe difficlty
 def calc_difficulty(cooking_time, num_of_ingredients):
@@ -51,23 +50,45 @@ user_filename = input('Please create a name for your recipe collection: ')
 try:
   with open('user_filename','rb') as user_file:
     data = pickle.load(user_file)
-except:
-  
+except FileNotFoundError:
+  data = {
+    'recipes_list' : [],
+    'all_ingredients':[]
+  }
+#use the base class for all exceprions to display the error, using as keyword
+except Exception as error:
+  print(error)
+  data = {
+    'recipes_list' : [],
+    'all_ingredients':[]
+  }
+else:
+  user_file.close()
+#extracting the data loaded from user's files
+finally:
+  recipes_list = data['recipe_list']
+  all_ingredients = data['all_ingredients']
 
 
-
-
-
-
+#excuting the script for taking information from the user
 n = int(input('How many recipes would you like to entre? '))
 for i in range(n):
   recipe = take_recipe()
+  recipes_list.append(recipe)
 
   for ingredient in recipe['ingredients']:
-    if ingredient not in ingredients_list:
-      ingredients_list.append(ingredient)
-  
-  recipes_list.append(recipe)
+    if ingredient not in all_ingredients:
+      all_ingredients.append(ingredient)
+
+#update date
+data = {
+  'recipe_list': recipes_list,
+  'all_ingredients' : all_ingredients
+}
+
+#open user's file and write data into it
+with open ('user_filename','rb') as user_file:
+  pickle.dump(data, user_file)
 
 print('\nRecipes List:')
 for recipe in recipes_list:
@@ -76,9 +97,9 @@ for recipe in recipes_list:
     print("Ingredients:\n- " + '\n- '.join(recipe['ingredients']))#use join method to join the values to one string, also can not use backslash in f string
     print(f"Difficulty Level: {recipe['difficulty']}")
 
-sorted_ingredients_list = sorted(ingredients_list)
+sorted_all_ingredients = sorted(all_ingredients)
 
 print('\nIngredients Available Across All Recipes\n- - - - - - - - - - - - - - - - - -')
-for ingredient in sorted_ingredients_list:
+for ingredient in sorted_all_ingredients:
   print(ingredient.capitalize())
 
