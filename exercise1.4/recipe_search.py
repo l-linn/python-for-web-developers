@@ -26,7 +26,7 @@ def search_ingredient(data):
     print(f'Please enter a number between 1 and {len(sorted_all_ingredients) - 1}.')
   else:
     #using List Comprehension
-    recipes_with_ingredient_searched = [recipe for recipe in data['recipe_list'] if ingredient_searched in recipe['ingredients']]
+    recipes_with_ingredient_searched = [recipe for recipe in data['recipes_list'] if ingredient_searched in recipe['ingredients']]
     for recipe in recipes_with_ingredient_searched:
       display_recipe(recipe)
 
@@ -35,7 +35,7 @@ user_filename = input('Please entre the name of your recipe collection:')
 
 #execute search_ingredient function
 try:
-  with open('user_filename','rb') as user_file:
+  with open(user_filename,'rb') as user_file:
     data = pickle.load(user_file)
 except FileNotFoundError:
     print("Collection not found. Please check your collection name and try again.")
