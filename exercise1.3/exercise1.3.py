@@ -60,4 +60,3 @@ sorted_ingredients_list = sorted(ingredients_list)
 print('\nIngredients Available Across All Recipes\n- - - - - - - - - - - - - - - - - -')
 for ingredient in sorted_ingredients_list:
   print(ingredient.capitalize())
-
