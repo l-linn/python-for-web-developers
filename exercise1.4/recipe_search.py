@@ -15,14 +15,14 @@ def search_ingredient(data):
   print('\nIngredients Available Across All Recipes\n- - - - - - - - - - - - - - - - - -')
   #using enumerate in a for loop, takes in count and iterable
   for count, item in enumerate(sorted_all_ingredients, 1):
-    print(count, item)
+    print(count, item.capitalize())
   
   try:
     choosed_number = int(input('Please choose a number that represents the ingredient you wish to include in your meal: '))
     ingredient_searched = sorted_all_ingredients[choosed_number - 1]
   except ValueError:
     print("Invalid input! Please enter a number.")
-  except:
+  except IndexError:
     print(f'Please enter a number between 1 and {len(sorted_all_ingredients) - 1}.')
   else:
     #using List Comprehension
@@ -32,11 +32,12 @@ def search_ingredient(data):
 
 #open user's file
 user_filename = input('Please entre the name of your recipe collection:')
+user_filename = user_filename + '.bin'
 
 #execute search_ingredient function
 try:
-  with open(user_filename,'rb') as user_file:
-    data = pickle.load(user_file)
+  user_file = open(user_filename, "rb")
+  data = pickle.load(user_file)
 except FileNotFoundError:
     print("Collection not found. Please check your collection name and try again.")
 else:

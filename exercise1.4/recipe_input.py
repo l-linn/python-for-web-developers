@@ -22,7 +22,7 @@ def calc_difficulty(cooking_time, num_of_ingredients):
 #Define the function for taking user input - recipe name, cooking time, ingredients
 def take_recipe():
   name = input('Please give your recipe a name: ')
-  cooking_time = input('How long is the cooking time? In minutes please: ')
+  cooking_time = int(input('How long is the cooking time? In minutes please: '))
   
   ingredients = [] #create an empty list then add user input into the list as list item
   print('Please list out the ingredients (type \'done\' when finished)') #skip quotes - adding backslash bedore hte single quotation 
@@ -45,11 +45,12 @@ def take_recipe():
   return recipe #need to return the variable to save it
 
 #try-except-else-finally block to store and access user's data
-user_filename = input('Please create a name for your recipe collection: ')
+user_filename = input('Please create a name for your recipe collection (without extension): ')
+user_filename = user_filename + '.bin'
 
 try:
-  with open(user_filename,'rb') as user_file:
-    data = pickle.load(user_file)
+  user_file = open(user_filename, "rb")
+  data = pickle.load(user_file)
 except FileNotFoundError:
   data = {
     'recipes_list' : [],
@@ -76,9 +77,8 @@ for i in range(n):
   recipe = take_recipe()
   recipes_list.append(recipe)
 
-  for ingredient in recipe['ingredients']:
-    if ingredient not in all_ingredients:
-      all_ingredients.append(ingredient)
+# use set to remove duplicate and cast back to a list
+  all_ingredients = list(set(all_ingredients + recipe['ingredients']))
 
 #update date
 data = {
