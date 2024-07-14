@@ -77,6 +77,7 @@ class Recipe(object):
 def recipe_search(data, search_term):
   #recipe parameter here is one of the objects that is created using class Recipe
   print('>>> Recipes that contain' + ' "' + search_term + '"' + ':\n---------------------')
+  #not sure if it's better to use enumerate to label the recipes
   for count, recipe in enumerate(data, 1):
     if recipe.search_ingredient(search_term):
       print(count, recipe)
