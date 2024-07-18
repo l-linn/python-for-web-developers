@@ -1,4 +1,4 @@
-class Recipe(object):
+class Recipe():
   
 
   all_ingredients = set()
@@ -65,18 +65,20 @@ class Recipe(object):
   #string representation
   def __str__(self):
     #use backslash to start a break a line
-    output = 'Recipe Name: ' + self.name + \
-    '\nCooking Time(in minutes): ' + str(self.cooking_time) + \
-    '\nIngredients: ' + '\n- '.join(self.ingredients) + \
-    '\nDifficulty: ' + self.get_difficulty() + \
-    '\n---------------------'
+    ingredients = ', '.join(self.ingredients)
+
+    output = f'''Recipe Name: {self.name}
+    Cooking Time(in minutes): {self.cooking_time}
+    Ingredients: {ingredients}
+    Difficulty: {self.get_difficulty()}
+    {"-" * 20}'''
     
     return output
 
 #function to search a recipe by one ingredient
 def recipe_search(data, search_term):
   #recipe parameter here is one of the objects that is created using class Recipe
-  print('>>> Recipes that contain' + ' "' + search_term + '"' + ':\n---------------------')
+  print('>>> Recipes that contain' + ' "' + search_term + '"' + ':\n')
   #not sure if it's better to use enumerate to label the recipes
   for count, recipe in enumerate(data, 1):
     if recipe.search_ingredient(search_term):
