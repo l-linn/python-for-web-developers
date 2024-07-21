@@ -101,7 +101,7 @@ def create_recipe(conn, cursor):
     conn.commit()
 
     print('Recipe added successfully!')
-    print('Return to Main Menu..')
+    print('\nReturn to Main Menu..')
 
 #Calculare difficulty
 def calculate_difficulty(cooking_time, num_of_ingredients):
@@ -118,12 +118,20 @@ def calculate_difficulty(cooking_time, num_of_ingredients):
     print('Hmm, something is not right.')
   return difficulty
 
+#format and display the recipe
+def display_recipe(row):
+  print('Recipe NO.' + str(row[0]))
+  print('   Recipe Name: ' + row[1])
+  print('   Ingredients: ' + row[2])
+  print('   Cooking Time: ' + str(row[3]))
+  print('   Difficulty: ' + row[4] + '\n')
+
 #Searching for a recipe by ingredient
 def search_recipe(conn, cursor):
   #get a list of all ingredients that is available in the Recipes table
   cursor.execute("SELECT ingredients FROM Recipes")
-  results = cursor.fetchall()
-  print(results)
+  results = cursor.fetchall()# results here is a list of tuples
+  #print(results)
 
   if not results:
     print('The ingredient list is empty..')
@@ -131,13 +139,57 @@ def search_recipe(conn, cursor):
   all_ingredients = set()
   print('>>> Search a for a recipe that contains the ingrendient you like to have')
 
+  #loop through results
+  for result in results:
+    print(result)
+    ingredients_list = result[0].split(', ') #[0] returns the first element of a list.
+    for ingredient in ingredients_list:
+      ingredient.capitalize()
+      all_ingredients.add(ingredient.strip())
+      #print(all_ingredients)
+  
+  sorted_all_ingredients = sorted(all_ingredients)
 
+  print('\nIngredients Available Across All Recipes\n- - - - - - - - - - - - - - - - - -')
+  #using enumerate in a for loop, takes in count and iterable
+  for count, item in enumerate(sorted_all_ingredients, 1):
+    print(count, item.capitalize())
 
+  try:
+    choosed_number = int(input('Please choose a number that represents the ingredient you wish to include in your meal: '))
+    ingredient_searched = sorted_all_ingredients[choosed_number - 1]
+  except ValueError:
+    print('Invalid input! Please enter a number.')
+  except IndexError:
+    print(f'Please enter a number between 1 and {len(sorted_all_ingredients) - 1}.')
 
-  return
+  cursor.execute('SELECT * FROM Recipes WHERE ingredients LIKE %s',
+                 ('%' + ingredient_searched + '%', ))
+  
+  recipes_with_ingredient_searched = cursor.fetchall()
+  if recipes_with_ingredient_searched:
+    for row in recipes_with_ingredient_searched:
+      print('>>> Available Recipes:')
+      display_recipe(row)
+  else:
+    print('Sorry, no recipe found.')
+
+  print('Return to Main Menu..')
 
 #Updating an existing recipe
 def update_recipe(conn, cursor):
+  cursor.execute('SELECT * FROM Recipes')
+  results = cursor.fetchall()
+
+  print('>>> Update an existing recipe')
+  print('== List of all recipes ==')
+  for row in results:
+      display_recipe(row)
+  
+  choosen_recipe_id = int(input('Please entre the ID (No.) of recipe that you wish to update: '))
+  cursor.execute('SELECT * FROM Recipes WHERE id = %s', (choosen_recipe_id))
+
+
   return
 
 #Delete a recipe
