@@ -1,44 +1,61 @@
 import pickle
 
-#function to display all attributes of one recipe
+
+# function to display all attributes of one recipe
 def display_recipe(recipe):
-  print(f"Recipe Name: {recipe['name']}") #need to use double quotes for printing dict's key value pairs
-  print(f"Cooking Time (min): {recipe['cooking_time']}")
-  print("Ingredients:\n- " + '\n- '.join(recipe['ingredients']))#use join method to join the values to one string, also can not use backslash in f string
-  print(f"Difficulty Level: {recipe['difficulty']}")
-   
+    print(
+        f"Recipe Name: {recipe['name']}"
+    )  # need to use double quotes for printing dict's key value pairs
+    print(f"Cooking Time (min): {recipe['cooking_time']}")
+    print(
+        "Ingredients:\n- " + "\n- ".join(recipe["ingredients"])
+    )  # use join method to join the values to one string, also can not use backslash in f string
+    print(f"Difficulty Level: {recipe['difficulty']}")
+
+
 def search_ingredient(data):
-  sorted_all_ingredients = sorted(data['all_ingredients'])
-  for ingredient in sorted_all_ingredients:
-    ingredient.capitalize()
+    sorted_all_ingredients = sorted(data["all_ingredients"])
+    for ingredient in sorted_all_ingredients:
+        ingredient.capitalize()
 
-  print('\nIngredients Available Across All Recipes\n- - - - - - - - - - - - - - - - - -')
-  #using enumerate in a for loop, takes in count and iterable
-  for count, item in enumerate(sorted_all_ingredients, 1):
-    print(count, item.capitalize())
-  
-  try:
-    chosen_number = int(input('Please choose a number that represents the ingredient you wish to include in your meal: '))
-    ingredient_searched = sorted_all_ingredients[chosen_number - 1]
-  except ValueError:
-    print("Invalid input! Please enter a number.")
-  except IndexError:
-    print(f'Please enter a number between 1 and {len(sorted_all_ingredients) - 1}.')
-  else:
-    #using List Comprehension
-    recipes_with_ingredient_searched = [recipe for recipe in data['recipes_list'] if ingredient_searched in recipe['ingredients']]
-    for recipe in recipes_with_ingredient_searched:
-      display_recipe(recipe)
+    print(
+        "\nIngredients Available Across All Recipes\n- - - - - - - - - - - - - - - - - -"
+    )
+    # using enumerate in a for loop, takes in count and iterable
+    for count, item in enumerate(sorted_all_ingredients, 1):
+        print(count, item.capitalize())
 
-#open user's file
-user_filename = input('Please entre the name of your recipe collection:')
-user_filename = user_filename + '.bin'
+    try:
+        chosen_number = int(
+            input(
+                "Please choose a number that represents the ingredient you wish to include in your meal: "
+            )
+        )
+        ingredient_searched = sorted_all_ingredients[chosen_number - 1]
+    except ValueError:
+        print("Invalid input! Please enter a number.")
+    except IndexError:
+        print(f"Please enter a number between 1 and {len(sorted_all_ingredients) - 1}.")
+    else:
+        # using List Comprehension
+        recipes_with_ingredient_searched = [
+            recipe
+            for recipe in data["recipes_list"]
+            if ingredient_searched in recipe["ingredients"]
+        ]
+        for recipe in recipes_with_ingredient_searched:
+            display_recipe(recipe)
 
-#execute search_ingredient function
+
+# open user's file
+user_filename = input("Please entre the name of your recipe collection:")
+user_filename = user_filename + ".bin"
+
+# execute search_ingredient function
 try:
-  user_file = open(user_filename, "rb")
-  data = pickle.load(user_file)
+    user_file = open(user_filename, "rb")
+    data = pickle.load(user_file)
 except FileNotFoundError:
     print("Collection not found. Please check your collection name and try again.")
 else:
-  search_ingredient(data)
+    search_ingredient(data)
