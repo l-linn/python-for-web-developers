@@ -18,8 +18,8 @@ def search_ingredient(data):
     print(count, item.capitalize())
   
   try:
-    choosed_number = int(input('Please choose a number that represents the ingredient you wish to include in your meal: '))
-    ingredient_searched = sorted_all_ingredients[choosed_number - 1]
+    chosen_number = int(input('Please choose a number that represents the ingredient you wish to include in your meal: '))
+    ingredient_searched = sorted_all_ingredients[chosen_number - 1]
   except ValueError:
     print("Invalid input! Please enter a number.")
   except IndexError:
