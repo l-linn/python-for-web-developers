@@ -328,6 +328,7 @@ def delete_recipe(conn, cursor):
     else:
         print('Please choose between "Y" and  "N"')
 
+    conn.commit()
     return
 
 
