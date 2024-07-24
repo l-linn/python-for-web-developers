@@ -14,7 +14,13 @@ cursor.execute(
                name VARCHAR(50) NOT NULL,
                ingredients VARCHAR(225) NOT NULL,
                cooking_time INT NOT NULL,
-               difficulty VARCHAR (20))"""
+               difficulty VARCHAR (20))
+               """
+)
+
+cursor.execute("ALTER TABLE Recipes ADD CHECK (cooking_time > 0);")
+cursor.execute(
+    "ALTER TABLE Recipes ADD CHECK (difficulty IN ('Easy', 'Medium', 'Intermediate', or 'Hard'));"
 )
 
 
@@ -28,7 +34,7 @@ def main_menu(conn, cursor):
         print(f"{'=' * 13}")
         print("What would you like to do? Please pick an option:")
         print(
-            f"""
+            """
           1. Create a new recipe
           2. Search for a recipe by ingredient
           3. Update an existing recipe
@@ -58,7 +64,7 @@ def main_menu(conn, cursor):
     conn.close()
 
 
-# Calculare difficulty
+# Calculate difficulty
 def calculate_difficulty(cooking_time, num_of_ingredients):
     difficulty = ""
     if cooking_time < 10 and num_of_ingredients < 4:
@@ -109,8 +115,8 @@ def create_recipe(conn, cursor):
         except ValueError:
             print("Please entre a number!")
 
-    for i in range(number_of_recipes):
-        print(f"=== Recipe NO.{i+1} ===")
+    for i in range(1, number_of_recipes + 1):
+        print(f"=== Recipe NO.{i} ===")
 
         name = input("Please give your recipe a name: ")
         cooking_time = int(input("How long is the cooking time? In minutes please: "))
@@ -118,7 +124,7 @@ def create_recipe(conn, cursor):
         ingredients = []
         print(
             "Please list out the ingredients (type 'done' when finished)"
-        )  # skip quotes - adding backslash bedore hte single quotation
+        )  # skip quotes - adding backslash before hte single quotation
 
         while True:
             ingredient = input("- ")
@@ -126,7 +132,8 @@ def create_recipe(conn, cursor):
                 break
             ingredients.append(ingredient)
 
-        # MySQL doesn’t fully support arrays, your ingredients list needs to be converted into a comma-separated string.
+        # MySQL doesn’t fully support arrays
+        # your ingredients list needs to be converted into a comma-separated string.
         ingredients_str = ", ".join(ingredients)
 
         # call function to add difficulty to recipe
@@ -178,12 +185,13 @@ def search_recipe(conn, cursor):
         print(count, item.capitalize())
 
     try:
-        choosed_number = int(
+        chosen_number = int(
             input(
-                "Please choose a number that represents the ingredient you wish to include in your meal: "
+                """Please choose a number that represents \
+                the ingredient you wish to include in your meal: """
             )
         )
-        ingredient_searched = sorted_all_ingredients[choosed_number - 1]
+        ingredient_searched = sorted_all_ingredients[chosen_number - 1]
     except ValueError:
         print("Invalid input! Please enter a number.")
         return
@@ -233,7 +241,11 @@ def update_recipe(conn, cursor):
             f"You have selected Recipe No.{selected_recipe[0][0]} {selected_recipe[0][1]}"
         )
         print(
-            f"What would you like to update?\nPlease choose from:\n1. Recipe Name\n2. Cooking Time\n3. Ingredients"
+            """What would you like to update?\n
+            Please choose from:
+            1. Recipe Name
+            2. Cooking Time
+            3. Ingredients"""
         )
         update_option = input("Please entre the option number: ")
 
