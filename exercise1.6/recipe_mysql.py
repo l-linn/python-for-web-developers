@@ -197,6 +197,9 @@ def search_recipe(conn, cursor):
     except IndexError:
         print(f"Please enter a number between 1 and {len(sorted_all_ingredients) - 1}.")
         return
+    except Exception:
+        print("Something went wrong..")
+        return
 
     cursor.execute(
         "SELECT * FROM Recipes WHERE ingredients LIKE %s",
@@ -231,7 +234,7 @@ def update_recipe(conn, cursor):
     # need to check if the input id exists, how?
     cursor.execute(
         "SELECT * FROM Recipes WHERE id = %s", (recipe_id,)
-    )  # this has to be a tuple, list or dict hense the comma
+    )  # this has to be a tuple, list or dict hence the comma
     selected_recipe = cursor.fetchall()
     # print(selected_recipe)
 
