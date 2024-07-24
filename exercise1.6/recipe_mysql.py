@@ -11,9 +11,9 @@ cursor.execute("USE task_database")
 cursor.execute(
     """CREATE TABLE IF NOT EXISTS Recipes(
                id INT PRIMARY KEY AUTO_INCREMENT,
-               name VARCHAR(50),
-               ingredients VARCHAR(225),
-               cooking_time INT,
+               name VARCHAR(50) NOT NULL,
+               ingredients VARCHAR(225) NOT NULL,
+               cooking_time INT NOT NULL,
                difficulty VARCHAR (20))"""
 )
 
