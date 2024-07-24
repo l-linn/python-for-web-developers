@@ -162,7 +162,7 @@ def search_recipe(conn, cursor):
         print("The ingredient list is empty..")
 
     all_ingredients = set()
-    print(">>> Search a for a recipe that contains the ingrendient you like to have")
+    print(">>> Search a for a recipe that contains the ingredient you like to have")
 
     # loop through results
     for result in results:
@@ -171,7 +171,6 @@ def search_recipe(conn, cursor):
             ", "
         )  # [0] returns the first element of a list.
         for ingredient in ingredients_list:
-            ingredient.capitalize()
             all_ingredients.add(ingredient.strip())
             # print(all_ingredients)
 
