@@ -140,7 +140,8 @@ def create_recipe(conn, cursor):
         difficulty = calculate_difficulty(int(cooking_time), len(ingredients))
 
         # wrap and insert the date above into MySQL
-        insert_data_sql = "INSERT INTO Recipes (name, ingredients, cooking_time, difficulty) VALUES (%s, %s, %s, %s)"
+        insert_data_sql = "INSERT INTO Recipes (name, ingredients, cooking_time, difficulty) \
+              VALUES (%s, %s, %s, %s)"
         user_input_value = (name, ingredients_str, cooking_time, difficulty)
         cursor.execute(insert_data_sql, user_input_value)
 
