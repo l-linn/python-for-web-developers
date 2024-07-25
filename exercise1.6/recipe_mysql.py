@@ -196,7 +196,7 @@ def search_recipe(conn, cursor):
         print("Invalid input! Please enter a number.")
         return
     except IndexError:
-        print(f"Please enter a number between 1 and {len(sorted_all_ingredients) - 1}.")
+        print(f"Please enter a number between 1 and {len(sorted_all_ingredients)}.")
         return
     except Exception:
         print("Something went wrong..")
