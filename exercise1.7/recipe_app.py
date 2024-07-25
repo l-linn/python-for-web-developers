@@ -37,12 +37,11 @@ class Recipe(Base):
     # detailed representation prints a well-formatted version of the recipe
     def __str__(self):
         return f"""
-				{"=" * 20}
-				Recipe No.{self.id}
-				Ingredients: {self.ingredients.title()}
-				Cooking Time: {self.cooking_time} minutes
-				Difficulty: {self.difficulty}
-				{"=" * 20}"""
+        Recipe Name: {self.name}
+        Ingredients: {self.ingredients.title()}
+        Cooking Time: {self.cooking_time} minutes
+        Difficulty: {self.difficulty}
+        {"= " * 16}"""
 
     # convert Ingredients to a list - .splits()
     def return_ingredients_as_list(self):
@@ -170,15 +169,13 @@ def view_all_recipes():
 
     # print all recipes
     for recipe in recipes:
-        print(recipe.__str__)
+        print(recipe.__str__())
 
     # print a total number of recipes
     total_recipe_number = len(recipes)
-    print(
-        f"\n> You have {total_recipe_number} recipes saved, well done!\nReturning to the main menu\n...\n..\n."
-    )
+    print(f"\n> You have {total_recipe_number} recipes saved, well done!")
 
-    return
+    return_to_main_menu()
 
 
 ## ------------------------------------FUNCTION 3 SEARCH A RECIPE BY INGREDIENT-------------------------------
@@ -227,9 +224,7 @@ def search_recipe():
         # user input would be something like : 1 4 5 15 and this will be a string "1 4 5 15"
         # use slipt to separate that string to a list of string ["1","4","5","15"]
         chosen_numbers = input(
-            """> What ingredients you want to include in your meal?
-            Please choose a number from above
-            Please separate multiple numbers with spaces:\n"""
+            "> What ingredients you want to include in your meal?\n> Please choose a number from above\n> Please separate multiple numbers with spaces:\n"
         ).split()
 
         for number in chosen_numbers:
@@ -255,11 +250,34 @@ def search_recipe():
         ingredient = sorted_all_ingredients[number - 1]
         search_ingredients.append(ingredient)
 
+    search_ingredients_str = ", ".join(search_ingredients)
+    # print(search_ingredients)
+
     # a list contains like() conditions for every ingredient to be searched for
     conditions = []
+    # Append the search condition
+    for ingredient in search_ingredients:
+        conditions.append(Recipe.ingredients.like(f"%{ingredient}%"))
+
+    # print(conditions) # this is not readable ex. [<sqlalchemy.sql.elements.BinaryExpression object at 0x1032574c0>]
+    matched_recipes = session.query(Recipe).filter(*conditions).all()
+
+    # print header
+    print("= " * 20)
+    print(f"Recipes contains ingredients: {search_ingredients_str}")
+    print("= " * 20)
+
+    if matched_recipes:
+        for recipe in matched_recipes:
+            print(recipe.__str__())
+    else:
+        print("> Sorry, no recipe found!")
+
+    print("\nRecipe search over.")
+    return_to_main_menu()
 
 
-# the main menu
+# ------------------------------------------------MAIN MENU-----------------------------------------------------
 def main_menu():
     # loop running the main menu
     option = ""
@@ -298,6 +316,12 @@ def main_menu():
             print("> Please pick an option number!")
     session.close()
     engine.dispose()
+
+
+def return_to_main_menu():
+    print("\nReady to return to the main menu? Press ENTER")
+    input()
+    print("\nReturning to the main menu\n...\n..\n.")
 
 
 main_menu()
