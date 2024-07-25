@@ -68,10 +68,8 @@ class Recipe(Base):
 Base.metadata.create_all(engine)
 
 
-# Main Operations
-
-
-## ------------------------------------FUNCTION 1 Create recipes--------------------------------------------
+# ------------------------------------------------5 FUNCTIONS------------------------------------------------
+## ------------------------------------FUNCTION 1 CREATE RECIPES---------------------------------------------
 def create_recipe():
     # print header
     print()
@@ -148,7 +146,7 @@ def create_recipe():
     return
 
 
-## ------------------------------------FUNCTION 2 VIEW ALL RECIPES------------------------------------------
+## ------------------------------------FUNCTION 2 VIEW ALL RECIPES-------------------------------------------
 def view_all_recipes():
     # get all recipes from the database.
     recipes = session.query(Recipe).all()
@@ -178,7 +176,7 @@ def view_all_recipes():
     return_to_main_menu()
 
 
-## ------------------------------------FUNCTION 3 SEARCH A RECIPE BY INGREDIENT-------------------------------
+## ------------------------------------FUNCTION 3 SEARCH A RECIPE BY INGREDIENT------------------------------
 def search_recipe():
     # check if there is any recipes
     if session.query(Recipe).count() == 0:
@@ -277,7 +275,13 @@ def search_recipe():
     return_to_main_menu()
 
 
-# ------------------------------------------------MAIN MENU-----------------------------------------------------
+## ------------------------------------FUNCTION 4 UPDATE RECIPES---------------------------------------------
+
+
+## ------------------------------------FUNCTION 5 DELETE RECIPES---------------------------------------------
+
+
+# ------------------------------------------------MAIN MENU--------------------------------------------------
 def main_menu():
     # loop running the main menu
     option = ""
@@ -318,6 +322,7 @@ def main_menu():
     engine.dispose()
 
 
+# --------------------------------------FUNCTION TO RETURN TO MAIN MENU--------------------------------------
 def return_to_main_menu():
     print("\nReady to return to the main menu? Press ENTER")
     input()
