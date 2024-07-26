@@ -268,7 +268,7 @@ def search_recipe():
 ## ------------------------------------FUNCTION 4 UPDATE RECIPES---------------------------------------------
 def update_recipe():
     recipes = session.query(Recipe).all()
-    print(recipes)
+    # print(recipes)
     # check if there is any recipes
     if not recipes:
         no_recipe()
@@ -330,13 +330,13 @@ def update_recipe():
     if update_option == "1":
         updated_name = input(
             "> Please entre the new name for your recipe (50 characters max): "
-        ).strip
+        ).strip()
         if len(update_option) <= 50:
             recipe_to_edit.name = updated_name
         else:
             print("> Please entre a shorter name!")
 
-        print(f"> Recipe Name updated successfully to {updated_name}")
+        print(f"> Recipe Name updated successfully to {updated_name}.")
 
     # update ingredients
     elif update_option == "2":
@@ -409,6 +409,7 @@ def delete_recipe():
     recipe_to_delete = session.get(Recipe, int(chosen_id))
 
     if recipe_to_delete:
+        print(recipe_to_delete.__str__())
         user_confirmation = input(
             "> Is this the recipe you want to delete? Please entre Y to continue or N to return.\n"
         )
