@@ -7,7 +7,6 @@ from sqlalchemy.ext.declarative import declarative_base
 # import modules
 from sqlalchemy import Column
 from sqlalchemy.types import Integer, String
-from sqlalchemy import CheckConstraint
 
 # create engine
 engine = create_engine("mysql://cf-python:password@localhost/my_database")
@@ -37,6 +36,7 @@ class Recipe(Base):
     # detailed representation prints a well-formatted version of the recipe
     def __str__(self):
         return f"""
+        Recipe ID: {self.id}
         Recipe Name: {self.name}
         Ingredients: {self.ingredients.title()}
         Cooking Time: {self.cooking_time} minutes
@@ -138,7 +138,7 @@ def create_recipe():
         session.add(recipe_entry)
         # commit changes
         # do I need to sdo something to make sure the commit has no problem?
-        # session.commit()
+        session.commit()
 
         print("> Recipe added!")
     # display a message after this function
@@ -152,12 +152,7 @@ def view_all_recipes():
     recipes = session.query(Recipe).all()
     # display a message if the recipe list is empty
     if not recipes:
-        print()
-        print("* " * 20)
-        print("|" + " " * 10 + "NO SAVED RECIPES" + " " * 11 + "|")
-        print("* " * 20)
-        print("\n> Please add a recipe first!\n")
-        return None
+        no_recipe()
 
     # display header
     print()
@@ -180,12 +175,7 @@ def view_all_recipes():
 def search_recipe():
     # check if there is any recipes
     if session.query(Recipe).count() == 0:
-        print()
-        print("* " * 20)
-        print("|" + " " * 10 + "NO SAVED RECIPES" + " " * 11 + "|")
-        print("* " * 20)
-        print("\n> Please add a recipe first!\nReturning to the main menu\n...\n..\n.")
-        return
+        no_recipe()
 
     # get all ingredients from all recipes in the database.
     results = session.query(Recipe.ingredients).all()
@@ -276,9 +266,165 @@ def search_recipe():
 
 
 ## ------------------------------------FUNCTION 4 UPDATE RECIPES---------------------------------------------
+def update_recipe():
+    recipes = session.query(Recipe).all()
+    print(recipes)
+    # check if there is any recipes
+    if not recipes:
+        no_recipe()
+
+    # print header
+    print()
+    print("* " * 20)
+    print("|" + " " * 12 + "EDIT RECIPES" + " " * 13 + "|")
+    print("* " * 20)
+
+    print("\n> Select a recipe from the list below to edit\n")
+
+    print_short_recipe()
+
+    chosen_id = input("\n> Please entre the recipe ID to update that recipe: \n")
+    # How do I return to a certain step instead of all the way back to main menu?
+
+    results_id = session.query(Recipe.id).all()
+    if chosen_id not in str(results_id):
+        print("> Please choose a number that's in the list!")
+    elif chosen_id.isnumeric() is False or int(chosen_id) < 0:
+        print("> Please entre a valid number!")
+
+    # recipe_to_edit = session.query(Recipe).get(
+    # int(chosen_id))
+    # got a warning - The Query.get() method is considered legacy as of the 1.x
+    # use Session.get()
+    recipe_to_edit = session.get(Recipe, int(chosen_id))
+
+    if recipe_to_edit:
+        print(f"> You selected Recipe NO.{recipe_to_edit.id} - {recipe_to_edit.name}")
+        print(recipe_to_edit)
+
+        user_confirmation = input(
+            "> Is this the recipe you wanted? Please entre Y to continue or N to return.\n"
+        )
+
+        if user_confirmation.lower() == "y":
+
+            print(
+                """> What would you like to update?
+                Please choose from:
+                1. Recipe Name
+                2. Ingredients
+                3. Cooking Time"""
+            )
+        elif user_confirmation.lower() == "n":
+            return
+        else:
+            print("> Please select from the given options")
+
+    else:
+        print("> No such recipe saved..")
+        return_to_main_menu()
+
+    update_option = input("Please entre the option number: ")
+
+    # update recipe name
+    if update_option == "1":
+        updated_name = input(
+            "> Please entre the new name for your recipe (50 characters max): "
+        ).strip
+        if len(update_option) <= 50:
+            recipe_to_edit.name = updated_name
+        else:
+            print("> Please entre a shorter name!")
+
+        print(f"> Recipe Name updated successfully to {updated_name}")
+
+    # update ingredients
+    elif update_option == "2":
+        updated_ingredients = []
+        print(
+            "> Please re-entre all ingredients for this recipe (type 'done' when finished)"
+        )
+
+        while True:
+            ingredient = input("- ")
+            if ingredient.lower() == "done":
+                break
+            updated_ingredients.append(ingredient)
+
+        # print(updated_ingredients)
+
+        updated_ingredients_str = ", ".join(updated_ingredients)
+
+        recipe_to_edit.ingredients = updated_ingredients_str
+        print("> Ingredients updated!")
+
+        # update difficulty if changes
+        new_difficulty = recipe_to_edit.calculate_difficulty()
+        update_difficulty(new_difficulty, recipe_to_edit.difficulty)
+
+    # update cooking time
+    elif update_option == "3":
+        updated_cooking_time = int(
+            input("> Please entre the new cooking time in minutes: ")
+        )
+        recipe_to_edit.cooking_time = updated_cooking_time
+
+        print("> New cooking time added!")
+
+        new_difficulty = recipe_to_edit.calculate_difficulty()
+        update_difficulty(new_difficulty, recipe_to_edit.difficulty)
+
+    else:
+        print("> Recipe does not exist")
+
+    session.commit()
+
+    return_to_main_menu()
 
 
 ## ------------------------------------FUNCTION 5 DELETE RECIPES---------------------------------------------
+def delete_recipe():
+
+    if session.query(Recipe).count() == 0:
+        no_recipe()
+    # print header
+    print()
+    print("* " * 20)
+    print("|" + " " * 11 + "DELETE RECIPES" + " " * 12 + "|")
+    print("* " * 20)
+
+    print("\n> Select a recipe from the list below to delete\n")
+
+    print_short_recipe()
+
+    chosen_id = input("\n> Please entre the recipe ID to delete that recipe: \n")
+
+    results_id = session.query(Recipe.id).all()
+
+    if chosen_id not in str(results_id):
+        print("> Please choose a number that's in the list!")
+    elif chosen_id.isnumeric() is False or int(chosen_id) < 0:
+        print("> Please entre a valid number!")
+
+    recipe_to_delete = session.get(Recipe, int(chosen_id))
+
+    if recipe_to_delete:
+        user_confirmation = input(
+            "> Is this the recipe you want to delete? Please entre Y to continue or N to return.\n"
+        )
+
+        if user_confirmation.lower() == "y":
+            session.delete(recipe_to_delete)
+            session.commit()
+            print("> Recipe deleted successfully!")
+        elif user_confirmation.lower() == "n":
+            print("> Action cancelled.\n")
+        else:
+            print("> Please select from the given options")
+    else:
+        print("> no such recipe!")
+
+    return_to_main_menu()
 
 
 # ------------------------------------------------MAIN MENU--------------------------------------------------
@@ -308,10 +454,10 @@ def main_menu():
             create_recipe()
         elif option == "2":
             search_recipe()
-        # elif option == "3":
-        # update_recipe()
-        # elif option == "4":
-        # delete_recipe()
+        elif option == "3":
+            update_recipe()
+        elif option == "4":
+            delete_recipe()
         elif option == "5":
             view_all_recipes()
         elif option == "exit":
@@ -327,6 +473,38 @@ def return_to_main_menu():
     print("\nReady to return to the main menu? Press ENTER")
     input()
     print("\nReturning to the main menu\n...\n..\n.")
+
+
+# --------------------------------------FUNCTION TO UPDATE DIFFICULTY--------------------------------------
+def update_difficulty(new_difficulty, difficulty):
+    if new_difficulty != difficulty:
+        new_difficulty = difficulty
+        print(f"> Recipe difficulty changed to: {new_difficulty}.")
+    else:
+        print("> Recipe difficulty remains the same!")
+
+
+# --------------------------------------FUNCTION TO RETURN NO RECIPE MESSAGE---------------------------------
+def no_recipe():
+    print()
+    print("* " * 20)
+    print("|" + " " * 10 + "NO SAVED RECIPES" + " " * 11 + "|")
+    print("* " * 20)
+    print("\n> Please add a recipe first!\n")
+    return_to_main_menu()
+
+
+# --------------------------------------FUNCTION TO PRINT SHORTEN RECIPES--------------------------------------
+def print_short_recipe():
+    print("* " * 20)
+    print("|" + " " * 12 + "ALL RECIPES" + " " * 14 + "|")
+    print("* " * 20)
+    results = session.query(Recipe.id, Recipe.name).all()
+    # print all recipes, but only display the name and id
+    for result in results:
+        result_id = result[0]
+        result_name = result[1]
+        print(f"Recipe NO.{result_id} - {result_name}")
 
 
 main_menu()
