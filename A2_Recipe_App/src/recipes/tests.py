@@ -23,6 +23,3 @@ class RecipeTestCase(TestCase):
         recipe = Recipe.objects.get(id=1)
         max_length = recipe._meta.get_field("name").max_length
         self.assertEqual(max_length, 50)
-
-
-# how do I test fav_recipes?
