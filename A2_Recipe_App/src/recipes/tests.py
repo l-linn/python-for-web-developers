@@ -8,7 +8,7 @@ class RecipeTestCase(TestCase):
         Recipe.objects.create(
             name="",
             cooking_time="",
-            difficulty="",
+            difficulty="",  # this is set as a choice
             serves="",
             ingredients="",
             methods="",
