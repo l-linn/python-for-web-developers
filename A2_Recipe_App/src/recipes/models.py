@@ -17,7 +17,7 @@ class Recipe(models.Model):
     difficulty = models.CharField(
         max_length=20, choices=difficulty_choice
     )  # String based on choice
-    serves = models.CharField(max_length=20)
+    serves = models.PositiveIntegerField()
     ingredients = models.TextField()
     methods = models.TextField()
 
